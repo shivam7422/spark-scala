@@ -1,0 +1,18 @@
+package spark_R
+
+import org.apache.spark.sql.SparkSession
+
+object new_pivot extends App {
+
+  val spark= SparkSession.builder().appName("converting rows to columns ").master("local").getOrCreate()
+  import spark.implicits._
+  val data = Seq(("Banana",1000,"USA"), ("Carrots",1500,"USA"), ("Beans",1600,"USA"),
+    ("Orange",2000,"USA"),("Orange",2000,"USA"),("Banana",400,"China"),
+    ("Carrots",1200,"China"),("Beans",1500,"China"),("Orange",4000,"China"),
+    ("Banana",2000,"Canada"),("Carrots",2000,"Canada"),("Beans",2000,"Mexico")).toDF("Products","Money","Country")
+  data.printSchema()
+  data.show()
+  val b= data.groupBy("Products").pivot("country").sum("money")
+  b.show()
+
+}
